@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1737053705476,
+      "tag": "0000_swift_archangel",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1748447026412,
+      "tag": "0001_fixed_vin_gonzales",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1752909191527,
+      "tag": "0002_bizarre_sue_storm",
+      "breakpoints": true
+    }
+  ]
+}

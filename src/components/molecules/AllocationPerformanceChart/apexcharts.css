@@ -1,0 +1,78 @@
+.apex-toolbar-default .apexcharts-toolbar {
+  background: #334155; /* slate-700 */
+  border-radius: 8px;
+  padding: 0;
+  gap: 0; /* ensure no container gap */
+  top: -20px !important;
+}
+
+/* Ensure native page scroll on touch devices inside the chart area */
+.apex-toolbar-default .apexcharts-canvas,
+.apex-toolbar-default .apexcharts-svg {
+  touch-action: pan-x pan-y !important; /* prevent chart from hijacking gestures */
+  -ms-touch-action: pan-x pan-y !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Make each toolbar button larger and center the icon */
+.apex-toolbar-default .apexcharts-toolbar > div:not(.apexcharts-menu) {
+  width: 32px !important;
+  height: 32px !important;
+  display: grid;
+  place-items: center;
+  margin-left: 0 !important;
+  border-radius: 0; /* flush between neighbors */
+}
+
+/* Ensure the menu itself is not constrained like buttons */
+.apex-toolbar-default .apexcharts-toolbar > div.apexcharts-menu {
+  width: auto !important;
+  height: auto !important;
+  margin-left: 0 !important;
+}
+
+.apex-toolbar-default .apexcharts-toolbar > div:hover {
+  background: rgba(148, 163, 184, 0.2); /* slate-400/20 */
+}
+
+/* Enlarge default and custom SVG icons */
+.apex-toolbar-default .apexcharts-toolbar svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.apex-toolbar-default .apexcharts-custom-icon.toggle-labels svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Context menu styling (matches treemap styles) */
+.apex-toolbar-default .apexcharts-menu-icon > svg {
+  color: white !important;
+}
+
+/* Export/context menu theming (works even if menu is portaled outside the chart) */
+.apexcharts-menu,
+.apex-toolbar-default .apexcharts-menu,
+.apex-toolbar-default .apexcharts-menu-open {
+  background: #334155 !important; /* slate-700 */
+  color: white !important;
+  border: 1px solid #475569; /* slate-600 */
+  border-radius: 6px;
+  box-shadow: 0 12px 6px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Ensure the export menu is not clipped by a fixed height */
+.apexcharts-menu.apexcharts-menu-open,
+.apex-toolbar-default .apexcharts-menu,
+.apex-toolbar-default .apexcharts-menu-open {
+  height: auto !important;
+  max-height: none !important;
+  line-height: 1.25rem !important; /* fix tight line-height */
+  padding: 4px 0 !important;
+}
+
+.apexcharts-menu-item:hover,
+.apex-toolbar-default .apexcharts-menu-item:hover {
+  background-color: #475569 !important; /* slate-600 */
+}

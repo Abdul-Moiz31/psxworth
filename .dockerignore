@@ -1,0 +1,17 @@
+.next
+node_modules
+.git
+.github
+.vscode
+.idea
+pnpm-debug.log
+npm-debug.log
+*.log
+.env
+.env.*
+Dockerfile
+*.md
+**/*.test.*
+**/*.spec.*
+coverage
+tmp

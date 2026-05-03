@@ -1,0 +1,1 @@
+export const MAXIMUM_NUMBER_VALUE = 1000000000;

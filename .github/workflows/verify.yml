@@ -1,0 +1,94 @@
+name: Verify
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: verify-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    environment: development
+    env:
+      AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
+      NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
+      POSTHOG_ENV_ID: ${{ secrets.POSTHOG_ENV_ID }}
+      POSTHOG_PERSONAL_API_KEY: ${{ secrets.POSTHOG_PERSONAL_API_KEY }}
+      USER_DATABASE_URL: ${{ secrets.USER_DATABASE_URL }}
+      DATA_DATABASE_URL: ${{ secrets.DATA_DATABASE_URL }}
+      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Docker/ghcr require lowercase repository names; normalize once for tags/cache (because of Wajahat43/networth)
+      - name: Normalize repository name (lowercase for Docker)
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+
+      - name: Build Docker image (verification)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64
+          push: false
+          load: false
+          tags: ghcr.io/${{ env.REPO_LC }}:verify
+          # Keep verify cache isolated from deploy cache to prevent PR runs
+          # from mutating the cache used by development/production deploys.
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LC }}:buildcache-arm64-verify
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LC }}:buildcache-arm64-verify,mode=min
+          build-args: |
+            AI_GATEWAY_API_KEY=${{ env.AI_GATEWAY_API_KEY }}
+            CLERK_SECRET_KEY=${{ env.CLERK_SECRET_KEY }}
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            NEXT_PUBLIC_POSTHOG_HOST=${{ env.NEXT_PUBLIC_POSTHOG_HOST }}
+            NEXT_PUBLIC_POSTHOG_KEY=${{ env.NEXT_PUBLIC_POSTHOG_KEY }}
+            POSTHOG_ENV_ID=${{ env.POSTHOG_ENV_ID }}
+            POSTHOG_PERSONAL_API_KEY=${{ env.POSTHOG_PERSONAL_API_KEY }}
+            USER_DATABASE_URL=${{ env.USER_DATABASE_URL }}
+            DATA_DATABASE_URL=${{ env.DATA_DATABASE_URL }}
+            UPSTASH_REDIS_REST_TOKEN=${{ env.UPSTASH_REDIS_REST_TOKEN }}
+            UPSTASH_REDIS_REST_URL=${{ env.UPSTASH_REDIS_REST_URL }}

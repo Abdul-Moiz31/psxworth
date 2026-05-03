@@ -1,0 +1,380 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 215 33% 17%; /* slate- */
+    --foreground: 220 14% 96%; /* slate-100 */
+
+    --card: 215 30% 15%; /* Custom dark grey */
+    --card-foreground: 210 40% 98%; /* white/slate-50 */
+
+    --popover: 215 30% 15%; /* Custom dark grey */
+    --popover-foreground: 210 40% 98%; /* white/slate-50 */
+
+    /* Using purple-600 as primary */
+    --primary: 270 90% 60%; /* purple-600 */
+    --primary-foreground: 210 40% 96.1%; /* slate-900 */
+
+    /* Using muted teal/cyan as secondary - provides distinct contrast from purple primary */
+    --secondary: 190 60% 45%; /* muted teal - distinct from purple, works well in dark theme */
+    --secondary-foreground: 210 40% 98%; /* white/slate-50 */
+
+    /* Muted slate colors for text and backgrounds */
+    --muted: 217.2 32.6% 17.5%; /* slate-800 */
+    --muted-foreground: 215 20.2% 65.1%; /* slate-400 */
+
+    /* Accent is a muted variation of primary (purple) with less saturation */
+    /* --accent: 186 100% 42%; cyan-500 */
+    /* --accent: 330 81.2% 60.4%; pink-500 */
+    /* --accent: 27 96% 61%; orange-400 */
+    /* --accent: 330 81.2% 60.4%; */
+    /* Using primary hue (270) with reduced saturation (75%) and slightly higher lightness (63%) for a less muted effect */
+    --accent: 270 75% 63%;
+
+    --accent-foreground: 210 40% 98%; /* white/slate-50 */
+
+    --destructive: 0 62.8% 60.6%; /* red-500 */
+    --destructive-foreground: 210 40% 98%; /* white/slate-50 */
+
+    --border: 217.2 32.6% 17.5%; /* slate-800 */
+    --input: 217.2 32.6% 17.5%; /* slate-800 */
+    --ring: 270 90% 60%; /* purple-600 - matches primary for focus rings */
+
+    /* Chart colors for data visualization */
+    --chart-1: 217.2 91.2% 59.8%; /* blue-500 */
+    --chart-2: 270 95% 75%; /* purple-500 */
+    --chart-3: 186 100% 42%; /* cyan-500 */
+    --chart-4: 158 64.4% 41.2%; /* green-500 */
+    --chart-5: 0 72.2% 50.6%; /* red-500 */
+
+    --radius: 0.5rem;
+
+    /* Sidebar variables */
+    --sidebar: 217 33% 12%; /* darker slate for sidebar */
+    --sidebar-foreground: 220 14% 96%; /* slate-100 */
+    --sidebar-primary: 270 90% 60%; /* purple-600 */
+    --sidebar-primary-foreground: 210 40% 96.1%;
+    --sidebar-accent: 217 33% 20%; /* slightly lighter slate for hover */
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 217.2 32.6% 22%; /* slate-700 */
+    --sidebar-ring: 270 90% 60%;
+  }
+
+  .dark {
+    /* Already using dark theme, so these will be the same */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 190 60% 45%; /* muted teal - matches light mode */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 186 100% 42%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 60.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 270 90% 60%; /* purple-600 - matches primary for focus rings */
+  }
+  .theme {
+    --animate-rippling: rippling 1s ease-out;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .animate-spin-reverse {
+    animation: spin-reverse 0.7s linear infinite;
+  }
+
+  /* Ensure default ApexCharts toolbar dimensions for charts using .apex-toolbar-default */
+  .apex-toolbar-default .apexcharts-toolbar {
+    width: auto !important;
+    height: auto !important;
+    z-index: 50 !important;
+  }
+
+  @keyframes spin-reverse {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+}
+
+/*CSS RESET*/
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  scrollbar-gutter: stable both-edges;
+}
+
+/* 5. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 7. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 4px;
+  transition: background 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 #f1f1f1;
+}
+
+/* For dark mode support */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #2d2d2d;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #666;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+
+  * {
+    scrollbar-color: #666 #2d2d2d;
+  }
+}
+
+/* add the code bellow */
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* Custom utility classes */
+.bg-size-200 {
+  background-size: 200% 200%;
+}
+
+.shadow-glow {
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+}
+
+/* Gradient animations */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 15s linear infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/**
+CSS RESET
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  /* 4. Add accessible line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 6. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 9. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/*
+  10. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate;
+}
+
+[data-radix-dialog-content] {
+  max-height: 100dvh !important;
+  overflow-y: auto !important;
+}
+
+/* For older browsers */
+@supports not (height: 100dvh) {
+  [data-radix-dialog-content] {
+    max-height: 100vh !important;
+  }
+}
