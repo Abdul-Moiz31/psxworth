@@ -28,7 +28,6 @@ AI-powered PSX portfolio tracker for Pakistan Stock Exchange investors with tran
 - `Drizzle ORM` with PostgreSQL
 - `TanStack Query` and `TanStack Table`
 - `PostHog` for product analytics
-- `Upstash Redis` for rate limiting
 
 ## Getting Started
 
@@ -37,7 +36,7 @@ AI-powered PSX portfolio tracker for Pakistan Stock Exchange investors with tran
 - `Node.js 20+`
 - `pnpm 8+`
 - PostgreSQL databases for user and market/data storage
-- Clerk, PostHog, and Upstash credentials
+- Clerk and PostHog credentials
 
 ### Installation
 
@@ -62,8 +61,8 @@ DATA_DATABASE_URL=
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 NEXT_PUBLIC_POSTHOG_KEY=
 NEXT_PUBLIC_POSTHOG_HOST=
-UPSTASH_REDIS_REST_TOKEN=
-UPSTASH_REDIS_REST_URL=
+POSTHOG_ENV_ID=
+POSTHOG_PERSONAL_API_KEY=
 USER_DATABASE_URL=
 ```
 

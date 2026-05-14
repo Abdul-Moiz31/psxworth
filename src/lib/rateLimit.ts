@@ -1,65 +1,47 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-import { headers } from "next/headers";
+type Bucket = { timestamps: number[] };
 
-const redis = Redis.fromEnv();
-
-// Create rate limiter for performance recalculation
-const createRateLimiter = (requests: number, window: string) => {
-  return new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(requests, window as any),
-  });
+type RateLimiter = {
+  limit: (key: string) => Promise<{
+    success: boolean;
+    limit: number;
+    reset: number;
+    remaining: number;
+  }>;
 };
 
-// Rate limiters for different actions
-export const rateLimiters = {
-  // Rate limiting for performance recalculation (heavy operation)
-  recalculatePerformance: createRateLimiter(5, "86400 s"), // 1 request per 12 hours.
-};
+const buckets = new Map<string, Bucket>();
 
-export const getClientIP = async () => {
-  const headersList = await headers();
-  const forwarded = headersList.get("x-forwarded-for");
-  const realIP = headersList.get("x-real-ip");
-
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
-  if (realIP) {
-    return realIP;
-  }
-  return "127.0.0.1";
-};
-
-export const checkRateLimit = async (limiter: Ratelimit, identifier?: string) => {
-  const ip = await getClientIP();
-  const key = identifier ? `${ip}:${identifier}` : ip;
-
-  const { success, limit, reset, remaining } = await limiter.limit(key);
-
+const createRateLimiter = (requests: number, windowMs: number): RateLimiter => {
   return {
-    success,
-    limit,
-    reset,
-    remaining,
-    retryAfter: success ? 0 : Math.ceil((reset - Date.now()) / 1000),
+    async limit(key: string) {
+      const now = Date.now();
+      const cutoff = now - windowMs;
+      const existing = buckets.get(key);
+      const recent = existing ? existing.timestamps.filter((t) => t > cutoff) : [];
+      const success = recent.length < requests;
+
+      if (success) {
+        recent.push(now);
+      }
+
+      if (recent.length === 0) {
+        buckets.delete(key);
+      } else {
+        buckets.set(key, { timestamps: recent });
+      }
+
+      const oldest = recent[0] ?? now;
+      return {
+        success,
+        limit: requests,
+        reset: oldest + windowMs,
+        remaining: Math.max(0, requests - recent.length),
+      };
+    },
   };
 };
 
-// Higher-order function to wrap server actions with rate limiting
-export const withRateLimit = <T extends any[], R>(
-  action: (...args: T) => Promise<R>,
-  limiter: Ratelimit,
-  identifier?: string
-) => {
-  return async (...args: T): Promise<R> => {
-    const rateLimitResult = await checkRateLimit(limiter, identifier);
-
-    if (!rateLimitResult.success) {
-      throw new Error(`Rate limit exceeded. Try again in ${rateLimitResult.retryAfter} seconds.`);
-    }
-
-    return action(...args);
-  };
+export const rateLimiters = {
+  // 5 recalculations per 24h per portfolio
+  recalculatePerformance: createRateLimiter(5, 24 * 60 * 60 * 1000),
 };
