@@ -3784,6 +3784,14 @@ export const STOCKS_INFO = [
     isGEM: false,
   },
   {
+    "symbol": "WAHDAT",
+    "name": "Wahdat Poultry Farm Limited",
+    "sectorName": "FOOD & PERSONAL CARE PRODUCTS",
+    "isETF": false,
+    "isDebt": false,
+    "isGEM": false
+  },
+  {
     symbol: "WAHN",
     name: "Wah Noble Chemicals Limited",
     sectorName: "CHEMICAL",
