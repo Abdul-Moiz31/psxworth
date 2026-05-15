@@ -22,7 +22,7 @@ interface AITransaction {
  * Maps shortened field names back to full schema field names.
  */
 export const parseTransactionsAIResponse = (aiResponse: AITransaction[]): Partial<TransactionSchemaType>[] => {
-  return aiResponse.map((item) => {
+  return aiResponse.filter((item) => item.t !== null).map((item) => {
     const transaction: Partial<TransactionSchemaType> = {};
 
     // ✅ Simplified: if value exists and is not null, it's determined
