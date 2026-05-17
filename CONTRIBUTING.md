@@ -8,6 +8,15 @@ Thanks for your interest in contributing! This guide will get you started.
 Comment on the issue you want to work on and wait for a maintainer to assign it to you.
 This avoids multiple people working on the same thing.
 
+Don't see your bug or feature listed? **Open a new issue** describing it. For bugs, include steps to reproduce, expected vs. actual behavior, and a screenshot if relevant. For features, describe the use case and rough proposal. Then comment to ask to be assigned before you start coding.
+
+## Branching model
+
+- **`develop`** — active development. All PRs target this branch.
+- **`main`** — production. Updated only from `develop` via release PRs by the maintainer.
+
+**Open PRs against `develop`, not `main`.** PRs targeting `main` will be closed or asked to be retargeted.
+
 ## Workflow
 
 1. **Find an issue** — look for open issues, pick one that's unassigned
@@ -34,11 +43,15 @@ This avoids multiple people working on the same thing.
 | Feature | `feat/auto-fill-shares` |
 | Refactor | `refactor/unified-button` |
 
+## Architecture
+
+For where to put new code (and where not to), see [docs/architecture.md](docs/architecture.md).
+
 ## PR Guidelines
 
 - Keep PR focused on 1 issue
 - Don't refactor unrelated code in the same PR
-- For UI changes, include a screenshot or screen recording in the PR description
+- For UI changes, include a screen recording showing **before and after** the change (a screenshot is okay for trivial visual tweaks, but a video is strongly preferred — it makes the change much easier to review)
 - Run these before opening a PR:
   ```bash
   pnpm lint

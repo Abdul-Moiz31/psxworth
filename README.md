@@ -31,48 +31,11 @@ AI-powered PSX portfolio tracker for Pakistan Stock Exchange investors with tran
 
 ## Getting Started
 
-### Prerequisites
+For full local setup instructions — including creating the two PostgreSQL databases, running migrations, and seeding the public market-data snapshot — see **[docs/local-setup.md](docs/local-setup.md)**.
 
-- `Node.js 20+`
-- `pnpm 8+`
-- PostgreSQL databases for user and market/data storage
-- Clerk and PostHog credentials
+## Contributing
 
-### Installation
-
-```bash
-pnpm install
-```
-
-### Environment Variables
-
-Create a local environment file and add the required runtime values:
-
-```bash
-cp .env.example .env.local
-```
-
-Required runtime variables:
-
-```env
-AI_GATEWAY_API_KEY=
-CLERK_SECRET_KEY=
-DATA_DATABASE_URL=
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-NEXT_PUBLIC_POSTHOG_KEY=
-NEXT_PUBLIC_POSTHOG_HOST=
-POSTHOG_ENV_ID=
-POSTHOG_PERSONAL_API_KEY=
-USER_DATABASE_URL=
-```
-
-### Run Locally
-
-```bash
-pnpm dev
-```
-
-The app runs with Next.js Turbopack and experimental HTTPS in development.
+Contributions welcome! See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the branching model, PR guidelines, and how to claim an issue before you start coding. Please follow our **[Code of Conduct](docs/CODE_OF_CONDUCT.md)**.
 
 ## Available Scripts
 
@@ -85,22 +48,11 @@ The app runs with Next.js Turbopack and experimental HTTPS in development.
 - `pnpm migrate:schema` - run schema migration script
 - `pnpm db:user:generate` - generate Drizzle migrations for the user DB
 - `pnpm db:user:migrate` - apply Drizzle migrations for the user DB
-- `pnpm db:user:backfill` - migrate user data from Turso to PostgreSQL
 - `pnpm db:user:studio` - open Drizzle Studio for the user DB
 
 ## Project Structure
 
-```text
-src/
-  app/          Next.js routes, layouts, metadata, API routes
-  actions/      Server actions and business logic
-  components/   UI, home page sections, and feature components
-  db/           Database clients and schema
-  features/     Domain-specific feature modules
-  lib/          Shared libraries and AI helpers
-  utils/        Hooks, constants, formatting, and helpers
-scripts/        Data and migration scripts
-```
+See **[docs/architecture.md](docs/architecture.md)** for the folder layout and where new code should go.
 
 ## Product Positioning
 
