@@ -21,15 +21,20 @@ interface AITransaction {
  * Transforms AI response with shortened field names to TransactionSchemaType format.
  * Maps shortened field names back to full schema field names.
  */
+const VALID_TRANSACTION_TYPES = ["buy", "sell", "dividend"] as const;
+type ValidTransactionType = (typeof VALID_TRANSACTION_TYPES)[number];
+
+const isValidType = (t: string | null): t is ValidTransactionType => {
+  const normalized = t?.trim().toLowerCase();
+  return VALID_TRANSACTION_TYPES.includes(normalized as ValidTransactionType);
+};
+
 export const parseTransactionsAIResponse = (aiResponse: AITransaction[]): Partial<TransactionSchemaType>[] => {
-  return aiResponse.filter((item) => item.t !== null).map((item) => {
+  return aiResponse.filter((item) => isValidType(item.t)).map((item) => {
     const transaction: Partial<TransactionSchemaType> = {};
 
-    // ✅ Simplified: if value exists and is not null, it's determined
-    // Map: t -> type
-    if (item.t) {
-      transaction.type = item.t as "buy" | "sell" | "dividend";
-    }
+    // Map: t -> type (safe — isValidType guard already confirmed this is valid)
+    transaction.type = item.t!.trim().toLowerCase() as ValidTransactionType;
 
     // Map: d -> transactionDate
     if (item.d) {
