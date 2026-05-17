@@ -20,7 +20,7 @@ export const transactionsAISchema = z.object({
   transactions: z.array(
     z.object({
       t: z
-        .string()
+        .enum(["buy", "sell", "dividend"])
         .nullable()
         .describe("Transaction type: 'buy'|'sell'|'dividend'|null (null if cannot be determined with accuracy)"),
       d: z

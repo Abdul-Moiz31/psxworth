@@ -29,8 +29,6 @@ jobs:
       POSTHOG_PERSONAL_API_KEY: ${{ secrets.POSTHOG_PERSONAL_API_KEY }}
       USER_DATABASE_URL: ${{ secrets.USER_DATABASE_URL }}
       DATA_DATABASE_URL: ${{ secrets.DATA_DATABASE_URL }}
-      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
-      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,8 +84,6 @@ jobs:
             POSTHOG_PERSONAL_API_KEY=${{ env.POSTHOG_PERSONAL_API_KEY }}
             USER_DATABASE_URL=${{ env.USER_DATABASE_URL }}
             DATA_DATABASE_URL=${{ env.DATA_DATABASE_URL }}
-            UPSTASH_REDIS_REST_TOKEN=${{ env.UPSTASH_REDIS_REST_TOKEN }}
-            UPSTASH_REDIS_REST_URL=${{ env.UPSTASH_REDIS_REST_URL }}
 
       - name: Trigger Coolify deployment
         if: success()

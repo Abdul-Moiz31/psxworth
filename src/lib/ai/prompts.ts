@@ -32,4 +32,11 @@ Data Quality:
 Output Requirements:
 - Transaction type: "buy" for purchases, "sell" for sales, "dividend" for dividend payments.
 - Only include notes if explicitly present in the source data.
-- Maintain accuracy - if a calculation would result in an invalid number, set the field to null instead.`;
+- Maintain accuracy - if a calculation would result in an invalid number, set the field to null instead.
+
+
+Filtering Rules:
+- Only extract entries that represent stock trades or dividend payments (buy, sell, dividend).
+- Entries representing cash movements, fund transfers, deposits, withdrawals, or any non-stock-trading activity must be EXCLUDED from the output entirely. Examples: "RECEIVED ONLINE FROM AC#...", bank transfers, account credits/debits, margin calls, subscription fees.
+- Do NOT emit a null-type row for these entries — omit them completely.`;
+
