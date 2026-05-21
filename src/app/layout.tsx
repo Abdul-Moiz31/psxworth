@@ -144,7 +144,7 @@ export default function RootLayout({
               }),
             }}
           />
-          <link rel="manifest" href="/manifest.json" />
+          <link rel="manifest" href="/manifest.webmanifest" />
         </head>
         <body
           style={{
