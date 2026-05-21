@@ -25,21 +25,17 @@ declare global {
 const INSTALLED_FLAG_KEY = "pwa_installed";
 
 const PWAInstallButton = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null | undefined>(undefined);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null | undefined>(() => {
+    if (typeof window === "undefined") return undefined;
 
-  useEffect(() => {
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       ("standalone" in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true);
-    // If the app is already running standalone or marked installed, start with
-    // no prompt available, but still attach listeners so we can detect when
-    // the app becomes installable again (e.g. user uninstalled but localStorage
-    // still has the flag set).
-    if (isStandalone || window.localStorage.getItem(INSTALLED_FLAG_KEY) === "true") {
-      setDeferredPrompt(null);
-      // don't return; continue to attach listeners
-    }
 
+    return isStandalone || window.localStorage.getItem(INSTALLED_FLAG_KEY) === "true" ? null : undefined;
+  });
+
+  useEffect(() => {
     const loadingTimeout = window.setTimeout(() => {
       setDeferredPrompt((currentPrompt) => (currentPrompt === undefined ? null : currentPrompt));
     }, 2500);
@@ -51,7 +47,7 @@ const PWAInstallButton = () => {
       // cleared during uninstall.
       try {
         window.localStorage.removeItem(INSTALLED_FLAG_KEY);
-      } catch (e) {
+      } catch {
         // ignore
       }
       setDeferredPrompt(event);
