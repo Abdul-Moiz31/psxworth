@@ -32,7 +32,13 @@ const PWAInstallButton = () => {
       window.matchMedia("(display-mode: standalone)").matches ||
       ("standalone" in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true);
 
-    return isStandalone || window.localStorage.getItem(INSTALLED_FLAG_KEY) === "true" ? null : undefined;
+    if (isStandalone) return null;
+
+    try {
+      return window.localStorage.getItem(INSTALLED_FLAG_KEY) === "true" ? null : undefined;
+    } catch {
+      return undefined;
+    }
   });
 
   useEffect(() => {
