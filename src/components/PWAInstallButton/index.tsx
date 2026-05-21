@@ -31,9 +31,13 @@ const PWAInstallButton = () => {
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       ("standalone" in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true);
+    // If the app is already running standalone or marked installed, start with
+    // no prompt available, but still attach listeners so we can detect when
+    // the app becomes installable again (e.g. user uninstalled but localStorage
+    // still has the flag set).
     if (isStandalone || window.localStorage.getItem(INSTALLED_FLAG_KEY) === "true") {
       setDeferredPrompt(null);
-      return;
+      // don't return; continue to attach listeners
     }
 
     const loadingTimeout = window.setTimeout(() => {
@@ -42,6 +46,14 @@ const PWAInstallButton = () => {
 
     const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
       event.preventDefault();
+      // If we get this event, the app is installable again — clear the
+      // installed flag so users can reinstall even if localStorage wasn't
+      // cleared during uninstall.
+      try {
+        window.localStorage.removeItem(INSTALLED_FLAG_KEY);
+      } catch (e) {
+        // ignore
+      }
       setDeferredPrompt(event);
       window.clearTimeout(loadingTimeout);
     };
