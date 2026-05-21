@@ -62,7 +62,11 @@ const PWAInstallButton = () => {
 
     const handleAppInstalled = () => {
       setDeferredPrompt(null);
-      window.localStorage.setItem(INSTALLED_FLAG_KEY, "true");
+      try {
+        window.localStorage.setItem(INSTALLED_FLAG_KEY, "true");
+      } catch {
+        // ignore
+      }
       window.clearTimeout(loadingTimeout);
       posthog.capture(PWA_INSTALL_ACCEPTED);
     };
