@@ -22,26 +22,34 @@ declare global {
   }
 }
 
+const INSTALLED_FLAG_KEY = "pwa_installed";
+
 const PWAInstallButton = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null | undefined>(undefined);
 
   useEffect(() => {
-    // Check if already installed (standalone mode)
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       ("standalone" in window.navigator && (window.navigator as { standalone?: boolean }).standalone === true);
-    if (isStandalone) {
-      setTimeout(() => setDeferredPrompt(null), 0);
-      return; // Already installed, no need to set up listeners
+    if (isStandalone || window.localStorage.getItem(INSTALLED_FLAG_KEY) === "true") {
+      setDeferredPrompt(null);
+      return;
     }
+
+    const loadingTimeout = window.setTimeout(() => {
+      setDeferredPrompt((currentPrompt) => (currentPrompt === undefined ? null : currentPrompt));
+    }, 2500);
 
     const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
       event.preventDefault();
       setDeferredPrompt(event);
+      window.clearTimeout(loadingTimeout);
     };
 
     const handleAppInstalled = () => {
       setDeferredPrompt(null);
+      window.localStorage.setItem(INSTALLED_FLAG_KEY, "true");
+      window.clearTimeout(loadingTimeout);
       posthog.capture(PWA_INSTALL_ACCEPTED);
     };
 
@@ -49,6 +57,7 @@ const PWAInstallButton = () => {
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
+      window.clearTimeout(loadingTimeout);
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
