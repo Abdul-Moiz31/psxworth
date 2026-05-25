@@ -99,7 +99,7 @@ export const TransactionSummary: React.FC<TransactionSummaryProps> = ({ transact
       <p className="text-sm text-muted-foreground mt-2">
         Received {displayValue("Dividend per Share", dividendPerShare, formatCurrency)} dividend per share for{" "}
         {displayStockSymbol(stockSymbol)}
-        {numberOfShares !== undefined && numberOfShares !== null ? (
+        {numberOfShares !== undefined && numberOfShares !== null && String(numberOfShares).trim() !== "" ? (
           <> ({displaySharesValue(numberOfShares)} shares)</>
         ) : (
           ""
