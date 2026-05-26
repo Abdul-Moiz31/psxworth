@@ -4,7 +4,7 @@ import { DotFlow } from "@/components/ui/dot-flow";
 import GradientButton, { type GradientButtonProps } from "@/components/ui/gradient-button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const DEFAULT_LOADING_MESSAGES = [
   "Reading your paste",
@@ -35,10 +35,18 @@ export function LoadingGradientButton({
   const isDisabled = disabled || isLoading;
   const messages = loadingLabel ? [loadingLabel, ...loadingMessages] : loadingMessages;
   const [messageIndex, setMessageIndex] = useState(0);
+  const prevIsLoadingRef = useRef(isLoading);
 
   useEffect(() => {
-    if (!isLoading) {
+    const wasLoading = prevIsLoadingRef.current;
+    prevIsLoadingRef.current = isLoading;
+
+    if (wasLoading && !isLoading) {
       setMessageIndex(0);
+      return;
+    }
+
+    if (!isLoading) {
       return;
     }
 
