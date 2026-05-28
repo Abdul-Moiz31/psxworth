@@ -1,10 +1,12 @@
 "use client";
 
 import { DotFlow } from "@/components/ui/dot-flow";
-import GradientButton, { type GradientButtonProps } from "@/components/ui/gradient-button";
+import GradientButton, {
+  type GradientButtonProps,
+} from "@/components/ui/gradient-button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const DEFAULT_LOADING_MESSAGES = [
   "Reading your paste",
@@ -16,10 +18,10 @@ const DEFAULT_LOADING_MESSAGES = [
 
 const MESSAGE_INTERVAL_MS = 3200;
 
-export interface LoadingGradientButtonProps extends GradientButtonProps {
+export interface LoadingGradientButtonProps
+  extends GradientButtonProps {
   isLoading?: boolean;
   loadingLabel?: string;
-
   loadingMessages?: string[];
 }
 
@@ -33,38 +35,37 @@ export function LoadingGradientButton({
   ...props
 }: LoadingGradientButtonProps) {
   const isDisabled = disabled || isLoading;
-  const messages = loadingLabel ? [loadingLabel, ...loadingMessages] : loadingMessages;
+
+  const messages = loadingLabel
+    ? [loadingLabel, ...loadingMessages]
+    : loadingMessages;
+
   const [messageIndex, setMessageIndex] = useState(0);
-  const prevIsLoadingRef = useRef(isLoading);
 
   useEffect(() => {
-    const wasLoading = prevIsLoadingRef.current;
-    prevIsLoadingRef.current = isLoading;
-
-    if (wasLoading && !isLoading) {
-      setMessageIndex(0);
-      return;
-    }
-
-    if (!isLoading) {
-      return;
-    }
+    if (!isLoading) return;
 
     const intervalId = window.setInterval(() => {
-      setMessageIndex((current) => (current + 1) % messages.length);
+      setMessageIndex(
+        (current) => (current + 1) % messages.length,
+      );
     }, MESSAGE_INTERVAL_MS);
 
     return () => window.clearInterval(intervalId);
   }, [isLoading, messages.length]);
 
-  const activeMessage = messages[messageIndex] ?? messages[0];
+  const activeMessage =
+    messages[messageIndex] ?? messages[0];
 
   return (
     <GradientButton
       disabled={isDisabled}
       aria-busy={isLoading}
       aria-live={isLoading ? "polite" : undefined}
-      className={cn(isLoading && "shadow-lg shadow-cyan-500/20", className)}
+      className={cn(
+        isLoading && "shadow-lg shadow-cyan-500/20",
+        className,
+      )}
       {...props}
     >
       {isLoading ? (
@@ -72,20 +73,29 @@ export function LoadingGradientButton({
           <motion.span
             className="pointer-events-none absolute inset-0 rounded-md bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0"
             animate={{ x: ["-120%", "120%"] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "linear",
+            }}
           />
+
           <AnimatePresence mode="wait">
             <motion.span
               key={activeMessage}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              transition={{
+                duration: 0.25,
+                ease: "easeOut",
+              }}
               className="relative z-10 max-w-[14rem] text-center text-sm font-medium leading-snug text-slate-100 sm:max-w-none sm:text-left"
             >
               {activeMessage}
             </motion.span>
           </AnimatePresence>
+
           <DotFlow className="relative z-10 shrink-0" />
         </span>
       ) : (
